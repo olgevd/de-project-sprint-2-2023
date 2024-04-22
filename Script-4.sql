@@ -67,7 +67,10 @@ SELECT  t1.order_id,
     JOIN source3.craft_market_customers t3 ON t1.customer_id = t3.customer_id
 UNION
 SELECT  
-	/*cpo.id,*/
+	cpo.order_id,
+	cpo.order_created_date,
+	cpo.order_completion_date,
+	cpo.order_status,
 	cpo.craftsman_id,
 	cpo.craftsman_name,
 	cpo.craftsman_address,
@@ -78,10 +81,6 @@ SELECT
 	cpo.product_description,
 	cpo.product_type,
 	cpo.product_price,
-	cpo.order_id,
-	cpo.order_created_date,
-	cpo.order_completion_date,
-	cpo.order_status,
 	cpo.customer_id,
 	cus.customer_name,
 	cus.customer_address,
@@ -90,7 +89,6 @@ SELECT
 FROM external_source.craft_products_orders AS cpo 
     JOIN external_source.customers as cus ON cpo.customer_id = cus.customer_id;
 
-   
 
 MERGE INTO dwh.d_customer as t1
 USING (SELECT DISTINCT customer_name, customer_address, customer_birthday, customer_email FROM tmp_sources) t
@@ -146,7 +144,6 @@ WHEN NOT MATCHED THEN
   INSERT (product_id, craftsman_id, customer_id, order_created_date, order_completion_date, order_status, load_dttm)
   VALUES (t.product_id, t.craftsman_id, t.customer_id, t.order_created_date, t.order_completion_date, t.order_status, current_timestamp);
 
- 
  
  -- DDL витрины данных
 DROP TABLE IF EXISTS dwh.customer_report_datamart;
@@ -331,7 +328,7 @@ dwh_delta_update_result AS (
                                                 INNER JOIN dwh.d_craftsman dc ON fo.craftsman_id = dc.craftsman_id 
                                                 INNER JOIN dwh.d_customer dcs ON fo.customer_id = dcs.customer_id 
                                                 INNER JOIN dwh.d_product dp ON fo.product_id = dp.product_id
-                                                INNER JOIN dwh_update_delta ud ON fo.craftsman_id = dc.craftsman_id) AS T1
+                                                INNER JOIN dwh_update_delta ud ON fo.customer_id = dcs.customer_id) AS T1
                                     GROUP BY T1.customer_id, T1.customer_name, T1.customer_address, T1.customer_birthday, T1.customer_email, T1.report_period) AS T2 
                                 INNER JOIN (
                                     SELECT  dd.customer_id AS customer_id_for_product_type, 
@@ -399,7 +396,7 @@ update_delta AS (
         avg_price_order = updates.avg_price_order,  
         median_time_order_completed = updates.median_time_order_completed, 
         top_product_category = updates.top_product_category, 
-        top_craftsman_id = update.top_craftsman_id,
+        top_craftsman_id = updates.top_craftsman_id,
         count_order_created = updates.count_order_created, 
         count_order_in_progress = updates.count_order_in_progress, 
         count_order_delivery = updates.count_order_delivery, 
