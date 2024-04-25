@@ -1,7 +1,3 @@
 Привет!
-1. Добавила в конце SELECT, вывел колонку со значением в строке increment datamart
-последние 2 запроса dwh.customer_report_datamart и dwh.load_dates_customer_report_datamart таблицы выводят
-2. Данные отбираются в dwh_delta
-3. Да
-
-Почему подсвечивает dwh_delta_insert_result красным в запросе insert_delta? (см. приложенный скрин)
+1. Да, запрос выдает таблицы
+2. Сделала DROP таблиц customer_report_datamart и load_dates_customer_report_datamart. Запустила код, таблицы создались и заполнились данными
