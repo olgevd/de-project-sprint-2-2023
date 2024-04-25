@@ -1,13 +1,7 @@
 Привет!
-Выдает ошибку SQL Error [42601]: ERROR: syntax error at end of input
-  Позиция: 15133
-Подсвечивает красным строку FROM dwh_delta_insert_result) в запросе insert_delta
-Проверяла каждый запрос отдельно:
-dwh_delta_insert_result - выдает пустую таблицу.
-из-за этого insert_delta выдает updated rows - 0
-Все остальные запросы работают
+1. Добавила в конце SELECT, вывел колонку со значением в строке increment datamart
+последние 2 запроса dwh.customer_report_datamart и dwh.load_dates_customer_report_datamart таблицы выводят
+2. Данные отбираются в dwh_delta
+3. Да
 
-В dwh_delta_insert_result выдается пустая таблица из-за условия WHERE T1.exist_customer_id IS NULL.
-Если вывести отдельно столбец exist_customer_id, окажется, что там ненулевые значения. 
-
-В чем ошибка - я не могу понять
+Почему подсвечивает dwh_delta_insert_result красным в запросе insert_delta? (см. приложенный скрин)

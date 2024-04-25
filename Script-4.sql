@@ -433,6 +433,8 @@ insert_load_date AS (
                     COALESCE(MAX(products_load_dttm), NOW())) 
         FROM dwh_delta)
         
+SELECT 'increment datamart'; 
+        
 select *
 from dwh.customer_report_datamart;
 select *
